@@ -1,9 +1,17 @@
 ## ORM (object relation mapping)
 from orm.ProductStock import ProductStock
 from orm.Product import Product
+from orm.Bag import Bag
+from orm.BagItems import BagItems
 
-p1 = Product(5, "My Product", 100, "UDS", "1111111111111", 100)
-ProductStock.subProductQuantity(p1, 5)
+test = BagItems.get(1)
+print(test)
+
+
+
+
+# p1 = Product(5, "My Product", 100, "UDS", "1111111111111", 100)
+# ProductStock.subProductQuantity(p1, 5)
 
 # p1 = Product(5, "My Product", 100, "UDS", "1111111111111", 10)
 # ProductStock.addProduct(p1)
