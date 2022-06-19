@@ -1,7 +1,22 @@
 ## ORM (object relation mapping)
-
-from numpy import save
+from orm.ProductStock import ProductStock
 from orm.Product import Product
+
+p1 = Product(5, "My Product", 100, "UDS", "1111111111111", 100)
+ProductStock.subProductQuantity(p1, 5)
+
+# p1 = Product(5, "My Product", 100, "UDS", "1111111111111", 10)
+# ProductStock.addProduct(p1)
+
+
+
+
+# p1.delet()
+# all = Product.all()
+# print(all)
+
+# available = ProductStock.isProductAvailable(1)
+# print(available)
 
 # p1 = Product(5, "My Prod", 100, "UDS", "1100464008403", 10)
 # p2 = Product(2, "Second", 100,"UDS","213564688453",10)
@@ -11,5 +26,5 @@ from orm.Product import Product
 # print(p2)
 # products = Product.all()
 # print(*products, sep = "\n")
-prod = Product.get(0)
-print(prod)
+# prod = Product.get(5)
+# print(prod)

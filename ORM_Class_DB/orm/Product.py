@@ -1,4 +1,3 @@
-from numpy import equal, prod
 from .Connector import *
 # Modelul tabelului SQL Product
 
@@ -10,46 +9,64 @@ class Product:
         self.price_unit = price_unit
         self.bar_code = bar_code
         self.quantity = quantity
-    
-    def create(self):
+
+    def executeUpdateSQL(sql):
         mycursor = mydb.cursor()
-        mycursor.execute(f"INSERT INTO product (id, name, price_value, price_unit, bar_code, quantity)\
-            VALUES ({self.id},  \"{self.name}\",  {self.price_value},  \"{self.price_unit}\",  \"{self.bar_code}\",  {self.quantity});")
-        mydb.commit()
-        mycursor.close()
-        mydb.close()
-    def save(self):
-        mycursor = mydb.cursor()
-        sql = f"UPDATE product SET name=\"{self.name}\" , price_value={self.price_value}, price_unit=\"{self.price_unit}\", bar_code=\"{self.bar_code}\", quantity={self.quantity} WHERE id = {self.id};"
-        print(sql)
         mycursor.execute(sql)
         mydb.commit()
         mycursor.close()
         mydb.close()
+    def executeFetchSQL(sql):
+        mycursor = mydb.cursor()
+        mycursor.execute(sql)
+        result = mycursor.fetchall()
+        return result
+    def create(self):
+        sql = f"INSERT INTO product (id, name, price_value, price_unit, bar_code, quantity)\
+            VALUES ({self.id},  \"{self.name}\",  {self.price_value},  \"{self.price_unit}\",  \"{self.bar_code}\",  {self.quantity});"
+        Product.executeUpdateSQL(sql)
+
+    def save(self):
+        
+        sql = f"UPDATE product SET name=\"{self.name}\" , price_value={self.price_value}, price_unit=\"{self.price_unit}\", bar_code=\"{self.bar_code}\", quantity={self.quantity} WHERE id = {self.id};"
+        Product.executeUpdateSQL(sql)
 
         # HW1 Finis Delete Method
-    def delet(id):
-        mycursor = mydb.cursor()
-        mycursor.execute(f"DELETE FROM product WHERE id = {id};")
-        mydb.commit()
-        mycursor.close()
-        mydb.close()
+
+    def delet(self):
+       
+        sql = f"DELETE FROM product WHERE id = {self.id};"
+        Product.executeUpdateSQL(sql)
+        
     
     def get(id):
-        mycursor = mydb.cursor()
-        mycursor.execute(f"SELECT * FROM product WHERE id = {id};")
+        sql = f"SELECT * FROM product WHERE id = {id};"
+        product_list = Product.executeFetchSQL(sql)
+        if len(product_list) == 1:
+            id, name, price_value, price_unit, bar_code, quantity = product_list[0]
+            product = Product(id, name, price_value, price_unit, bar_code, quantity)
+        else :
+            product = None
+        return product
         # HW 2 : Write a condition that returns None when there is no product anvalible
-        product = mycursor.fetchall().copy()
-        if len(product) == 1 :
-           return product[0]
-        else : 
-           return None 
+        # product = mycursor.fetchall().copy()
+        # if len(product) == 1 :
+        #    return product[0]
+        # else : 
+        #    return None 
         
     def all():
-        mycursor = mydb.cursor()
-        mycursor.execute(f"Select * from product;")
-        products = mycursor.fetchall()
+        sql = f"Select * from product;"
+        Product_List = Product.executeFetchSQL(sql)
+        products = []
+        for product_tuple in Product_List:
+            # HW1: try to optimize multiple parametrs into a functio
+            id, name, price_value, price_unit, bar_code, quantity = product_tuple
+            product = Product(id, name, price_value, price_unit, bar_code, quantity)   
+            products.append(product) 
         return products
 
     def __str__(self):
         return f"Product id {self.id}"
+    def __repr__(self):
+        return str(self)
